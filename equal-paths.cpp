@@ -11,60 +11,16 @@ using namespace std;
 
 int getHeight(Node* root);
 
+bool checkLeafLevels(Node* curr_node, int level, int& leaf_level);
+
 bool equalPaths(Node * root)
 {
     // Add your code below
 
-	/*
-	
-	find leaves (left, right) -- left + right are both nullptr
-	recurse up
-	update count
-	parent compares its left and right
-	if false then it is all false
+	int level = 1;
+	int leaf_level = 0; /*starts off uninitialized*/
 
-	alternative:
-	can do a get height and then recurse down and do get height until reaching
-	leaf nodes
-
-	alternative 2:
-	- go to the bottom first
-	then call getHeight()
-	- then it will pop into the parent node
-	call getHeight()
-	compare
-	until you either break or reach the root
-
-	*/
-
-	// base case (leaf node)
-	if (root->left == nullptr && root->right == nullptr)
-	{
-		return true;
-	}
-
-	// if get height == return true
-
-	if (getHeight(root->left) == getHeight(root->right))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-
-	//return equalPaths(root->right) && equalPaths(root->left);
-
-	/*
-	
-	can be parent
-	can have only a left child / only a right child
-	(if one of them is nullptr and the other one isn't)
-	can be a leaf node
-	
-	*/
-
+	return checkLeafLevels(root, level, leaf_level);
 }
 
 int getHeight(Node* root)
@@ -84,5 +40,45 @@ int getHeight(Node* root)
 	}
 	else {
 		return 1 + right_height;
+	}
+}
+
+bool checkLeafLevels(Node* curr_node, int curr_level, int& leaf_level)
+{
+	// base case
+
+	if (curr_node->left == nullptr && curr_node->right == nullptr)
+	{
+		if (leaf_level == 0)
+		{
+			leaf_level = curr_level;
+			return true;
+		}
+		else if (curr_level == leaf_level)
+		{
+			return true;
+		}
+		else if (curr_level != leaf_level)
+		{
+			return false;
+		}
+	}
+
+	// recursive step
+
+	// parent to one node
+	if (curr_node->right == nullptr && curr_node->left != nullptr)
+	{
+		return checkLeafLevels(curr_node->left, curr_level+1, leaf_level);
+	}
+	else if (curr_node->left == nullptr && curr_node->right != nullptr)
+	{
+		return checkLeafLevels(curr_node->right, curr_level+1, leaf_level);
+	}
+	// parent to two nodes
+	else
+	{
+		return checkLeafLevels(curr_node->left, curr_level+1, leaf_level) &&
+			   checkLeafLevels(curr_node->right, curr_level+1, leaf_level);
 	}
 }
