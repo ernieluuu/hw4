@@ -45,7 +45,14 @@ int getHeight(Node* root)
 
 bool checkLeafLevels(Node* curr_node, int curr_level, int& leaf_level)
 {
+
+
 	// base case
+
+	if (curr_node == nullptr)
+	{
+		return true;
+	}
 
 	if (curr_node->left == nullptr && curr_node->right == nullptr)
 	{
@@ -65,20 +72,6 @@ bool checkLeafLevels(Node* curr_node, int curr_level, int& leaf_level)
 	}
 
 	// recursive step
-
-	// parent to one node
-	if (curr_node->right == nullptr && curr_node->left != nullptr)
-	{
-		return checkLeafLevels(curr_node->left, curr_level+1, leaf_level);
-	}
-	else if (curr_node->left == nullptr && curr_node->right != nullptr)
-	{
-		return checkLeafLevels(curr_node->right, curr_level+1, leaf_level);
-	}
-	// parent to two nodes
-	else
-	{
-		return checkLeafLevels(curr_node->left, curr_level+1, leaf_level) &&
-			   checkLeafLevels(curr_node->right, curr_level+1, leaf_level);
-	}
+	return checkLeafLevels(curr_node->left, curr_level+1, leaf_level) && 
+		   checkLeafLevels(curr_node->right, curr_level+1, leaf_level);
 }
