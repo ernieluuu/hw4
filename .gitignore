@@ -2,4 +2,10 @@ hw4_tests/
 bst-test
 equal-paths-test
 *.o
-
+.vs/
+hw4.cpp
+hw4.sln
+hw4.vcxproj
+hw4.vcxproj.filters
+hw4.vcxproj.user
+x64/
