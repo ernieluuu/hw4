@@ -2,6 +2,7 @@
 #include <map>
 #include "bst.h"
 #include "avlbst.h"
+#include <utility>
 
 using namespace std;
 
@@ -12,6 +13,8 @@ int main(int argc, char *argv[])
     BinarySearchTree<char,int> bt;
     bt.insert(std::make_pair('a',1));
     bt.insert(std::make_pair('b',2));
+
+	//prettyPrintBST(bt);
     
     cout << "Binary Search Tree contents:" << endl;
     for(BinarySearchTree<char,int>::iterator it = bt.begin(); it != bt.end(); ++it) {
@@ -25,6 +28,20 @@ int main(int argc, char *argv[])
     }
     cout << "Erasing b" << endl;
     bt.remove('b');
+
+	// Specific BST Tests
+
+	cout << "------------Testing Remove 4Node------------" << endl;
+
+	BinarySearchTree<int, double> bst;
+	bst.insert(std::make_pair(5, 1.0));
+	bst.insert(std::make_pair(2, 1.0));
+	bst.insert(std::make_pair(6, 1.0));
+	bst.insert(std::make_pair(4, 1.0));
+
+	bst.remove(5);
+
+	cout << "------------Finished Testing------------" << endl;
 
     // AVL Tree Tests
     AVLTree<char,int> at;
