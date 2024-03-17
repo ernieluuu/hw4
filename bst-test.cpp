@@ -31,15 +31,26 @@ int main(int argc, char *argv[])
 
 	// Specific BST Tests
 
-	cout << "------------Testing Remove 4Node------------" << endl;
+	cout << "------------Testing Stress Remove------------" << endl;
 
-	BinarySearchTree<int, double> bst;
-	bst.insert(std::make_pair(5, 1.0));
-	bst.insert(std::make_pair(2, 1.0));
-	bst.insert(std::make_pair(6, 1.0));
-	bst.insert(std::make_pair(4, 1.0));
+	BinarySearchTree<int, int> testTree;
 
-	bst.remove(5);
+	testTree.insert(std::make_pair(2, 8));
+	testTree.insert(std::make_pair(1, -50));
+	testTree.insert(std::make_pair(3, 0));
+	testTree.insert(std::make_pair(10, 0));
+	testTree.insert(std::make_pair(15, 0));
+
+	testTree.print();
+
+	//testTree.remove(-1);
+	//testTree.remove(2);
+
+	testTree.print();
+
+	testTree.remove(10);
+
+	testTree.print();
 
 	cout << "------------Finished Testing------------" << endl;
 

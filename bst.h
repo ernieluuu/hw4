@@ -383,80 +383,6 @@ BinarySearchTree<Key, Value>::iterator::operator++()
 	}
 
 	return *this;
-
-	//// first we check if the current node is the root node
-	////if (this->current_ == BinarySearchTree<Key, Value>::root_)
-	//if (current_->getParent() == nullptr)
-	//{
-	//	if (current_->getRight()->getLeft() == nullptr)
-	//	{
-	//		current_ = current_->getRight();
-	//		return *this;
-	//	}
-	//	
-	//	else {
-	//		current_ = current_->getRight();
-
-	//		while (current_->getLeft() != nullptr)
-	//		{
-	//			current_ = current_->getLeft();
-	//		}
-	//		return *this;
-	//	}
-	//}
-
-	//// next, we check if current is a right or left child
-	//if (current_->getKey() < current_->getParent()->getKey())
-	//{ // left child
-	//	current_ = current_->getParent();
-	//	return *this;
-	//}
-	//else
-	//{ // right child
-	//	
-	//	// if there is further right childs down to go, go there
-	//	// else, while greater than parent, move up to the parents
-	//	// needs a way to terminate (probs while != iterator.end() which wraps the whole thing)
-	//	// otherwise if it is greater than every parent, then that must be the end
-
-	//	// if there is a further right child, go there
-	//	if (current_->getRight() != nullptr)
-	//	{
-	//		current_ = current_->getRight();
-	//		return *this;
-	//	}
-	//	else
-	//	{
-	//		/*this bit is all wrong*/
-	//		// propogate upwards until you find a parent node that is greater than current
-	//		// if you reach the root (parent is null) then there is no where left to iterate
-	//		// meaning you've reached the end of the tree
-
-	//		
-	//		// use a temp?
-
-
-	//		// could be while curr != end(), but you need a bt instance to do that
-	//		while (current_->getParent() != nullptr)
-	//		{
-	//			if (current_->getKey() > current_->getParent()->getKey())
-	//			{
-	//				current_ = current_->getParent();
-	//				continue;
-	//			}
-	//			else
-	//			{
-	//				current_ = current_->getParent();
-	//				return *this;
-	//			}
-	//		}
-	//		
-	//		// reached the end
-	//		current_ = nullptr;
-	//		return *this;
-	//	}
-	//}
-
 }
 
 
@@ -632,8 +558,6 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
 template<typename Key, typename Value>
 void BinarySearchTree<Key, Value>::remove(const Key& key)
 {
-    // TODO
-
 	// if empty
 	if (root_ == nullptr)
 	{
@@ -701,6 +625,9 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
 		{
 			root_ = curr->getLeft();
 			root_->setParent(nullptr);
+			// change root_'s ptrs to be curr's so that you don't lose curr's children
+			// root_->setRight(curr->getRight());
+			// could just swap and delete curr
 			delete curr;
 			return;
 		}
@@ -727,6 +654,7 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
 		{
 			root_ = curr->getRight();
 			root_->setParent(nullptr);
+			// do something here
 			delete curr;
 			return;
 		}
@@ -739,7 +667,7 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
 		}
 		else
 		{
-			curr->getParent()->setRight(curr->getLeft());
+			curr->getParent()->setRight(curr->getRight());
 		}
 		delete curr;
 	}
