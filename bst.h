@@ -251,7 +251,8 @@ protected:
 
     // Add helper functions here
 	void clearBinaryTree(Node<Key, Value>* root);
-	int getHeight(Node<Key, Value>* root);
+	int getHeight(Node<Key, Value>* root) const;
+	bool isNodeBalanced(Node<Key, Value>* node) const;
 
 protected:
     Node<Key, Value>* root_;
@@ -363,8 +364,6 @@ template<class Key, class Value>
 typename BinarySearchTree<Key, Value>::iterator&
 BinarySearchTree<Key, Value>::iterator::operator++()
 {
-    // TODO
-
 	// If the right subtree is not empty, move to the leftmost node of the right subtree
 	if (current_->getRight() != nullptr) {
 		current_ = current_->getRight();
@@ -513,7 +512,7 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
 		if (keyValuePair.first == curr->getKey())
 		{
 			curr->setValue(keyValuePair.second);
-			break;
+			return;
 		}
 
 		// move to the left
@@ -523,7 +522,7 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
 			{
 				Node<Key, Value>* insertedNode = new Node<Key, Value>(keyValuePair.first, keyValuePair.second, curr);
 				curr->setLeft(insertedNode);
-				break;
+				return;
 			}
 			else // continue the loop :(
 			{
@@ -539,6 +538,7 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
 			{
 				Node<Key, Value>* insertedNode = new Node<Key, Value>(keyValuePair.first, keyValuePair.second, curr);
 				curr->setRight(insertedNode);
+				return;
 			}
 			else
 			{
@@ -663,7 +663,7 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
 		// if curr is a left child
 		if (curr->getParent()->getLeft() == curr)
 		{
-			curr->getParent()->setLeft(curr->getLeft());
+			curr->getParent()->setLeft(curr->getRight()); // bug on this line, was initially curr->getLeft();
 		}
 		else
 		{
@@ -821,11 +821,11 @@ Node<Key, Value>* BinarySearchTree<Key, Value>::internalFind(const Key& key) con
 template<typename Key, typename Value>
 bool BinarySearchTree<Key, Value>::isBalanced() const
 {
-    // TODO
+	return isNodeBalanced(root_);
 
 	// check the heights of left + right
 
-	// use the iterator to check each node?
+	// use the iterator to check each node? nope.
 
 	// may need to add helper function that takes in an argument
 
@@ -834,7 +834,28 @@ bool BinarySearchTree<Key, Value>::isBalanced() const
 }
 
 template<typename Key, typename Value>
-int BinarySearchTree<Key, Value>::getHeight(Node<Key, Value>* root)
+bool BinarySearchTree<Key, Value>::isNodeBalanced(Node<Key, Value>* node) const
+{
+	if (node == nullptr)
+	{
+		return true;
+	}
+
+	int lh = getHeight(node->getLeft()); // left height
+	int rh = getHeight(node->getRight()); // right height
+
+	if (lh - rh <= 1 && lh - rh >= -1)
+	{
+		return isNodeBalanced(node->getLeft()) && isNodeBalanced(node->getRight());
+	}
+	else
+	{
+		return false;
+	}
+}
+
+template<typename Key, typename Value>
+int BinarySearchTree<Key, Value>::getHeight(Node<Key, Value>* root) const
 {
 	// base case
 	if (root == nullptr) {
@@ -842,9 +863,9 @@ int BinarySearchTree<Key, Value>::getHeight(Node<Key, Value>* root)
 	}
 
 	// recursive step
-	int left_height = getHeight(root->left);
+	int left_height = getHeight(root->getLeft());
 	// std::cout << root->key << "; ";
-	int right_height = getHeight(root->right);
+	int right_height = getHeight(root->getRight());
 
 	if (left_height > right_height) {
 		return 1 + left_height;
