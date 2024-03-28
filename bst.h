@@ -751,7 +751,7 @@ void BinarySearchTree<Key, Value>::clearBinaryTree(Node<Key, Value>* root)
 	clearBinaryTree(root->getRight());
 
 	// delete a node
-	delete root;
+	// delete root; /*not needed*/
 }
 
 /**

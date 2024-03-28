@@ -38,6 +38,15 @@ int main(int argc, char *argv[])
 
 	cout << "------------Testing AVL Tree------------" << endl;
 
+	AVLTree<uint16_t, uint16_t> testTree;
+
+	testTree.insert(std::make_pair(1, 9));
+	testTree.insert(std::make_pair(2, 8));
+
+	testTree.print();
+
+	cout << "------------Finished Specific Test------------" << endl;
+
     // AVL Tree Tests
     AVLTree<char,int> at;
     at.insert(std::make_pair('a',1));

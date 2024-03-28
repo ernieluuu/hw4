@@ -166,12 +166,15 @@ void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
 														  // so we must static_cast it to an AVL node later.
 
 	AVLNode<Key, Value>* new_node = static_cast<AVLNode<Key, Value>*>(this->internalFind(new_item.first));
-
+	/*FIXME: For some reason this line sets new_node's balance to -3*/
+	
 	if (new_node == nullptr)
 	{
 		std::cout << "Error: could not find the inserted node." << std::endl;
 		return;
 	}
+
+	new_node->setBalance(0); // manual correction for previous externality
 
 	if (new_node->getParent()->getBalance() != 0)
 	{
@@ -305,7 +308,6 @@ void AVLTree<Key, Value>::remove(const Key& key)
 	{
 		if (curr == this->root_)
 		{
-			delete curr;
 			this->root_ = nullptr;
 		}
 		else if (curr == curr->getParent()->getLeft())
@@ -375,8 +377,12 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value>* n, int8_t diff)
 	// compute next recursive call
 	AVLNode<Key, Value>* p = n->getParent();
 	int8_t ndiff;
-	// if p != nullptr
-	if (n == p->getLeft())
+	/*FIXME: what about when n is the root node & p is nullptr?*/
+	if (p == nullptr)
+	{
+		ndiff = -1; // fixme: what justifies this line?
+	}
+	else if (n == p->getLeft())
 	{
 		ndiff = 1;
 	}
@@ -550,6 +556,10 @@ void AVLTree<Key, Value>::rotateRight(AVLNode<Key, Value>* middle, AVLNode<Key, 
 	// top's right remains the same
 	AVLNode<Key, Value>* mid_old_right = middle->getRight();
 	middle->setRight(top);
+	if (top == this->root_)
+	{
+		this->root_ = middle;
+	}
 	top->setLeft(mid_old_right);
 
 	// parents:
@@ -558,7 +568,10 @@ void AVLTree<Key, Value>::rotateRight(AVLNode<Key, Value>* middle, AVLNode<Key, 
 	// change mid_old_right's parent to top
 	middle->setParent(top->getParent());
 	top->setParent(middle);
-	mid_old_right->setParent(top);
+	if (mid_old_right != nullptr)
+	{
+		mid_old_right->setParent(top);
+	}
 
 	// balances:
 	int8_t new_top_balance = top->getBalance() + 2;
@@ -577,6 +590,10 @@ void AVLTree<Key, Value>::rotateLeft(AVLNode<Key, Value>* middle, AVLNode<Key, V
 	// middle's left becomes top
 	AVLNode<Key, Value>* mid_old_left = middle->getLeft();
 	middle->setLeft(top);
+	if (top == this->root_)
+	{
+		this->root_ = middle;
+	}
 	top->setRight(mid_old_left);
 
 	// parents:
@@ -585,7 +602,10 @@ void AVLTree<Key, Value>::rotateLeft(AVLNode<Key, Value>* middle, AVLNode<Key, V
 	// mid_old_left's parent becomes top
 	middle->setParent(top->getParent());
 	top->setParent(middle);
-	mid_old_left->setParent(top);
+	if (mid_old_left != nullptr)
+	{
+		mid_old_left->setParent(top);
+	}
 
 	// balances:
 	int8_t new_top_balance = top->getBalance() - 2;
